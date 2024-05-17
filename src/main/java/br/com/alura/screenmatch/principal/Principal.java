@@ -4,15 +4,19 @@ import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.DadosTemporada;
 import br.com.alura.screenmatch.model.Episodio;
 import br.com.alura.screenmatch.model.Serie;
+import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
 import br.com.alura.screenmatch.principal.UIcolor;
 import ch.qos.logback.core.encoder.JsonEscapeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Principal {
+
+
 
     private Scanner leitura = new Scanner(System.in);
     private ConsumoApi consumo = new ConsumoApi();
@@ -21,7 +25,14 @@ public class Principal {
     private final String API_KEY = "&apikey=603e2e61";
     private List<DadosSerie> dadosSeries = new ArrayList<>();
 
-    public void exibeMenu() {
+    private SerieRepository repositorio;
+
+    public Principal(SerieRepository repositorio) {
+        this.repositorio = repositorio;
+    }
+
+
+        public void exibeMenu() {
         var opcao = -1;
         while (opcao != 0) {
             var menu = """
@@ -56,7 +67,10 @@ public class Principal {
 
     private void buscarSerieWeb() {
         DadosSerie dados = getDadosSerie();
-        dadosSeries.add(dados);
+        Serie serie = new Serie(dados);
+        //dadosSeries.add(dados);
+
+        repositorio.save(serie);
         System.out.println(dados);
 
     }
