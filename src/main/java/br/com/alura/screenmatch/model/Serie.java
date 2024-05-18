@@ -25,7 +25,7 @@ public class Serie {
     private String poster;
     private String sinopse;
     //@Transient // indica que nao precisa ser criado
-    @OneToMany(mappedBy = "serie")
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Episodio> episodios = new ArrayList<>();
 
     public Serie(DadosSerie dadosSerie) {
@@ -45,6 +45,7 @@ public class Serie {
     }
 
     public void setEpisodios(List<Episodio> episodios) {
+        episodios.forEach(e -> e.setSerie(this)); //"essa serie é dona desse episodio"
         this.episodios = episodios;
     }
 
@@ -126,6 +127,8 @@ public class Serie {
                 UIcolor.ANSI_BLUE + "\nAtores=: " + UIcolor.ANSI_RESET + atores +
                 UIcolor.ANSI_BLUE + "\nPoster=: " + UIcolor.ANSI_RESET + poster +
                 UIcolor.ANSI_BLUE + "\nSinopse: " + UIcolor.ANSI_RESET + sinopse +
+                UIcolor.ANSI_BLUE + "\nEpsodios: " + UIcolor.ANSI_RESET + episodios +
+
                 UIcolor.ANSI_RED + '}' + UIcolor.ANSI_RESET;
     }
 
