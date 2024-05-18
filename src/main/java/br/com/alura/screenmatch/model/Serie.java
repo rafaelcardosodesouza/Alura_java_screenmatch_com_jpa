@@ -14,7 +14,7 @@ public class Serie {
     @Id //indica que é uma variavel ID
     @GeneratedValue(strategy = GenerationType.IDENTITY) //informa como que é gerado as chaves primarias
     private long id;
-    @Column(unique = true) //indica que o titulo deverar ser unico nao pode ser repetidos
+    @Column(unique = true) //indica que o titulo devera ser unico nao pode ser repetidos
     private String titulo;
     private Integer totalTemporadas;
     private Double avaliacao;
@@ -24,7 +24,8 @@ public class Serie {
     private String atores;
     private String poster;
     private String sinopse;
-    @Transient // indica que nao precisa ser criado
+    //@Transient // indica que nao precisa ser criado
+    @OneToMany(mappedBy = "serie")
     private List<Episodio> episodios = new ArrayList<>();
 
     public Serie(DadosSerie dadosSerie) {

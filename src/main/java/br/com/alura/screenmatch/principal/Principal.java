@@ -67,10 +67,10 @@ public class Principal {
 
     private void buscarSerieWeb() {
         DadosSerie dados = getDadosSerie();
-        Serie serie = new Serie(dados);
+        Serie serie = new Serie(dados); // salvamos os dados no objeto serie
         //dadosSeries.add(dados);
 
-        repositorio.save(serie);
+        repositorio.save(serie); //.save é do proprio springBoot
         System.out.println(dados);
 
     }
@@ -97,10 +97,7 @@ public class Principal {
     }
 
     private void listarSeriesBuscadas() {
-        List<Serie> series = new ArrayList<>();
-        series = dadosSeries.stream()
-                .map(d -> new Serie(d))
-                .collect(Collectors.toList());
+        List<Serie> series = repositorio.findAll(); //findAll() é do springboot
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
                 .forEach(System.out::println);
