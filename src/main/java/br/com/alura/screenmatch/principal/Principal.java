@@ -1,9 +1,6 @@
 package br.com.alura.screenmatch.principal;
 
-import br.com.alura.screenmatch.model.DadosSerie;
-import br.com.alura.screenmatch.model.DadosTemporada;
-import br.com.alura.screenmatch.model.Episodio;
-import br.com.alura.screenmatch.model.Serie;
+import br.com.alura.screenmatch.model.*;
 import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
@@ -41,7 +38,10 @@ public class Principal {
                     3 - Listar séries 
                     4 - Buscar série por titulo
                     5 - Buscar serie por autor    
-                    6 - Top 5 series            
+                    6 - Top 5 series        
+                    7 - Buscar por categoria
+                    8 - Buscar por quantidade de temporada e avaliação
+                        
                     0 - Sair                                 
                     """;
             System.out.print(menu);
@@ -67,6 +67,12 @@ public class Principal {
                     break;
                 case 6:
                     topCinco();
+                    break;
+                case 7:
+                    buscarSeriePorCategoria();
+                    break;
+                case 8:
+                    buscaPorTemporadaEAvaliacao();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -158,4 +164,26 @@ public class Principal {
         List<Serie> serieTop = repositorio.findTop5ByOrderByAvaliacaoDesc();
         serieTop.forEach(s -> System.out.println(UIcolor.ANSI_BLUE + s.getTitulo() + UIcolor.ANSI_RESET + " Avaliação, " + UIcolor.ANSI_RED + s.getAvaliacao() + UIcolor.ANSI_RESET));
     }
+
+    private void buscarSeriePorCategoria() {
+        System.out.print("Digite o genero que deseja: ");
+        var genero = leitura.nextLine();
+        Categoria categoria = Categoria.fromPortugues(genero);
+
+        List<Serie> buscaGenero = repositorio.findByGenero(categoria);
+        System.out.println("Series por categoria: " + UIcolor.ANSI_RED + genero + UIcolor.ANSI_RESET);
+        buscaGenero.forEach(s -> System.out.println(UIcolor.ANSI_BLUE + s.getTitulo() + UIcolor.ANSI_RESET));
+    }
+
+    private void buscaPorTemporadaEAvaliacao(){
+        System.out.print("Quantas tempordas: ");
+        var temporadas = leitura.nextInt();
+        System.out.print("Qual avaliação minima: ");
+        var avaliacao = leitura.nextDouble();
+
+        List<Serie> busca = repositorio.seriesPorTemporadaEAvaliacao(temporadas, avaliacao);
+        System.out.println("Resultado: ");
+        busca.forEach(s -> System.out.println(UIcolor.ANSI_BLUE + s.getTitulo() + UIcolor.ANSI_RESET));
+    }
+
 }
