@@ -22,7 +22,9 @@ public class Principal {
     private List<DadosSerie> dadosSeries = new ArrayList<>();
 
     private SerieRepository repositorio;
+    private Optional<Serie> serieBusca;
     List<Serie> series = new ArrayList<>();
+
 
     public Principal(SerieRepository repositorio) {
         this.repositorio = repositorio;
@@ -42,6 +44,7 @@ public class Principal {
                     7 - Buscar por categoria
                     8 - Buscar por quantidade de temporada e avaliação
                     9 - Buscar episodio por trecho
+                    10 - Top 5 episódios por serie
                         
                     0 - Sair                                 
                     """;
@@ -77,6 +80,9 @@ public class Principal {
                     break;
                 case 9:
                     buscarEpisodioPorTrecho();
+                    break;
+                case 10:
+                    buscarPorTop5Episodios();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -147,12 +153,13 @@ public class Principal {
     private void buscarSeriePorTitulo() {
         System.out.println("Digite o Da serie: ");
         var nomeSerie = leitura.nextLine();
-        Optional<Serie> serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
-        if (serieBuscada.isPresent()) {
-            System.out.println("Dados da serie: " + serieBuscada.get());
+        serieBusca= repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+        if (serieBusca.isPresent()) {
+            System.out.println("Dados da serie: " + serieBusca.get());
         } else {
             System.out.println("Serie não encontrada");
         }
+
     }
 
     private void buscarSeriePorAutor() {
@@ -197,5 +204,17 @@ public class Principal {
 
         busca.forEach(s -> System.out.println(UIcolor.ANSI_RED+s.getSerie().getTitulo()+": "+UIcolor.ANSI_BLUE + s.getTitulo() + UIcolor.ANSI_RESET));
     }
+    private void buscarPorTop5Episodios(){
+        buscarSeriePorTitulo();
+        if(serieBusca.isPresent()){
+            Serie serie = serieBusca.get();
+            List<Episodio> topEpisodio = repositorio.topEpisodioPorSerie(serie);
+            topEpisodio.forEach(e -> System.out.println(UIcolor.ANSI_RED
+                    +e.getSerie().getTitulo()+": "
+                    +UIcolor.ANSI_BLUE + e.getTitulo()
+                    + UIcolor.ANSI_RESET+ " " + e.getAvaliacao()));
+        }
 
+
+    }
 }
